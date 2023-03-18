@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 canary() {
   echo "[Manager] [Canary] Starting Server"
   CTF/2022/2nd/3.c.elf &

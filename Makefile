@@ -3,18 +3,17 @@ all: CTF/2022/2nd/0.c.elf CTF/2022/2nd/1.c.elf CTF/2022/2nd/2.c.elf CTF/2022/2nd
 
 LIBCTF:=c_lib/libctf.a
 
-FLAGS:=-fno-PIE -O0 -I c_lib/include -g
+FLAGS:=-Wall -Wextra -Werror -no-pie -O0 -I c_lib/include -g
 
 $(LIBCTF): c_lib/src
 	@make -C c_lib
 
 CTF/2022/2nd/%.c.elf: CTF/2022/2nd/%.c $(LIBCTF)
-	@echo "Building $@ with Stack=Exec|NonPotected no-PIE"
+	@printf "> \x1b[32mBuilding $@ with Stack=Exec|NonPotected no-PIE\x1b[0m\n"
 	gcc $(FLAGS) -zexecstack -fno-stack-protector $^ -o $@
-	execstack -s $@
 
 CTF/2022/2nd/3.c.elf: CTF/2022/2nd/3.c $(LIBCTF)
-	@echo "Building $@ with Stack=NonExec|Protected no-PIE"
+	@printf "> \x1b[32mBuilding $@ with Stack=NonExec|Protected no-PIE\x1b[0m\n"
 	gcc $(FLAGS) $^ -o $@
 
 dbg: CTF/2022/2nd/1.c.elf
@@ -23,5 +22,5 @@ dbg: CTF/2022/2nd/1.c.elf
 run: CTF/2022/2nd/1.c.elf
 	CTF/2022/2nd/1.c.elf
 
-clean: 
+clean:
 	rm CTF/2022/2nd/*.elf

@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.meson": "meson",
+    "stdlib.h": "c",
+    "stdio.h": "c"
+  }
+}

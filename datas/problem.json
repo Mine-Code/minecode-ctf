@@ -1,14 +1,15 @@
 {
   "current": "2022_2nd",
-  "apps": {
+  "events": {
     "2022_2nd": {
-      "started": "2023-03-23T09:00:00Z"
+      "started": "2023-03-23T09:00:00Z",
       "problems": [
         {
+          "id": "2022_2nd_0",
           "name": "Basic Exploitation",
           "author": "syoch",
           "hints": [
-            "Buffer overflow",
+            "Buffer overflow"
           ],
           "files": {
             "minectf_0_0": "CTF/2022/2nd/0.c"
@@ -19,6 +20,7 @@
           }
         },
         {
+          "id": "2022_2nd_1",
           "name": "c0rrupt stack",
           "hints": [
             "Stack overflow",
@@ -27,13 +29,14 @@
           ],
           "files": {
             "minectf_0_1": "CTF/2022/2nd/1.c.elf"
-          }
+          },
           "worker": {
             "type": "exec",
             "path": "CTF/2022/2nd/1.c.elf"
           }
         },
         {
+          "id": "2022_2nd_2",
           "name": "Termination",
           "author": "syoch",
           "hints": [
@@ -50,6 +53,7 @@
           }
         },
         {
+          "id": "2022_2nd_3",
           "name": "Canary",
           "author": "syoch",
           "hints": [

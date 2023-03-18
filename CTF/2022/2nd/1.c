@@ -11,7 +11,7 @@ void flag() {
 
 int main() {
   char name[8] = {};
-  
+
   printf("What's your name? (256):\n");
 
   fgets(name, 2560, stdin);

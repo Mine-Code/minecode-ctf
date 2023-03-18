@@ -4,26 +4,27 @@
 #include <kbhit.h>
 #include <inttypes.h>
 
-int f(int sock)
-{ 
+int f(int sock) {
   char buf[8] = {};
 
   int l = 0;
-  printf("length: "); fflush(stdout);
+  printf("length: ");
+  fflush(stdout);
   scanf("%d", &l);
   fflush(stdin);
 
   bool dbg = getenv("DEBUG");
-  
+
   if (dbg) printf("Debugger is enabled.\n");
 
   printf("Reading the message...\n");
-  
+
   char c = '\0';
   for (int i = 0; i < l; i++) {
     read(sock, &c, 1);
     if (c == '\n') {
-      printf("Warning: you inputed %d characters, %d characters remained\n", i, l - i);
+      printf("Warning: you inputed %d characters, %d characters remained\n", i,
+             l - i);
       break;
     }
     buf[i] = c;
@@ -52,8 +53,7 @@ void handle_errno(const char *name, int ret) {
     exit(1);
   }
 }
-int main()
-{
+int main() {
   int sock0 = socket(AF_LOCAL, SOCK_STREAM, 0);
 
   struct sockaddr_un addr;
@@ -64,23 +64,26 @@ int main()
   handle_errno("bind", bind(sock0, (struct sockaddr *)&addr, sizeof(addr)));
 
   printf("[CTF Problem Server] Canary: Waiting for connection...\n");
-  
+
   handle_errno("listen", listen(sock0, 30));
-  
+
   for (;;) {
     struct sockaddr_in client;
     socklen_t len = sizeof(client);
     int sock = accept(sock0, (struct sockaddr *)&client, &len);
-    
+
     printf("[CTF Problem Server] Canary: Got new client %d\n", sock);
     if (fork() == 0) {
-      close(0);dup(sock);
-      close(1);dup(sock);
-      close(2);dup(sock);
-      
+      close(0);
+      dup(sock);
+      close(1);
+      dup(sock);
+      close(2);
+      dup(sock);
+
       f(sock);
       printf("Ended your session.\n");
-      
+
       shutdown(sock, SHUT_RDWR);
       close(sock);
       exit(0);
