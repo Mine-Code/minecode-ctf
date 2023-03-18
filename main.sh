@@ -12,7 +12,7 @@ ctf() {
   node main.js &
 }
 
-make
+make -C CTF
 
 canary
 sleep 1
