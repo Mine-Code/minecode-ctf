@@ -1,0 +1,5 @@
+const datas = require('./problem.json');
+
+
+
+module.exports
