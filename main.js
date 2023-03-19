@@ -68,7 +68,7 @@ wsServer.on('connection', (socket, req) => {
     socket.send("[Websocket Handler] Error: Invalid Ws Path format\n");
     socket.send("[Websocket Handler]   Correct Format: /interactive/{AppName}\"");
     socket.send("[Websocket Handler]          Example: /interactive/2022_2nd_0\n");
-    socket.send("[Websocket Handler] Secret Flag: mineCTF{F1nD1nG_B4cK3nD_4p1_WbS0cK}\n");
+    socket.send("[Websocket Handler] Secret Flag: mineCTF{F1nD1nG_B4cK3nD_4p1_W3bS0cK37}\n");
     socket.send("[Websocket Handler] You can input this key in the hamburger menu\n");
     socket.close();
     return;
@@ -90,13 +90,13 @@ wsServer.on('connection', (socket, req) => {
   });
 
   sess.onDisconnect((code) => {
-    socket.send(`[App Wrapper] The app has exited with code ${code}\n`);
+    socket.send(`[Wrapper] The app has exited with code ${code}\n`);
 
     socket.close();
   });
 
   sess.onConnect(() => {
-    socket.send("[App Wrapper] The app has started\n");
+    socket.send("[Wrapper] The app has started\n");
   });
 
   socket.on("message", (data) => {
