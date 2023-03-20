@@ -1,4 +1,8 @@
-# 問題の提出方法について
+# 2023 MineCode CTF の問題の提出について
+
+- Rev.2 (2023/03/20)
+
+## 問題の提出方法について
 
 問題の提出は以下のファイルを持つ tar.gz ファイルを Discord @syoch#5433 に投げてください
 
@@ -6,6 +10,52 @@
 - その他問題、デーモンなどで使用するファイル
 
 また、 tar.gz ファイルは Docker イメージの /mnt に展開されます。
+
+## .tar.gz ファイルの作り方
+
+metadata.json のあるディレクトリに移動して次のコマンドを実行してください。
+
+```bash
+tar cf - . | gzip > challenge.tar.gz
+```
+
+## ctflib について
+
+この Docker イメージには ctflib というちょっとしたライブラリが導入されています
+
+ctflib には次のヘッダーファイルと静的リンクファイルがあります。
+
+### `kbhit.h`
+
+- `void KB_open(void)`
+  - `kbhit` 関数を使用するために呼び出す必要があります。
+  - ターミナルの情報を一部書き換えるため、`KB_close` も呼ぶ必要があります。
+- `void KB_close(void)`
+  - KB_open で書き換わった情報などをもとに戻します。
+- `bool kbhit(void)`
+  - キーボードが打たれて `stdin` のバッファになにかデータがあるかを監視します。
+  - `true` であればデータがあり、 `false` であればデータが無いことを表します
+- `char linux_getch(void)`
+  - `kbhit` と組み合わせて使われ、`kbhit` で読み込んでしまったデータを取得できます。
+  - なお、２度 `kbhit` を経由して `stdin` からデータを読み込んでしまった場合、最後のデータのみが取得できます。
+
+### `socket_server.h`
+
+- `SOCKET_MAIN(pname, socket_path, f)`
+  - Unix domain Socket を用いた fork 型のサーバーを立ち上げる main 関数に展開されます。
+  - `pname` はログなどに使用されるため、 metadata.json のデータと合わせてください。
+  - `socket_path` は基本的にどこでもいいです。
+    - daemon.sock などがおすすめです。
+  - `f` は void(*)() 型のクライアントコールバックです
+
+## 言語などについて
+
+- 基本的に C 言語が推奨されてますが、 Forensics 問題や Cryptography 問題などでは、 Python や Javascript(NodeJS) の利用が好ましい場合があるので
+- python3
+
+## 実行環境について
+
+- 実行時には /mnt/metadata.json が root:root の 700 で権限系が初期化されるため、実行時にデータを読み取るためには SUID が設定されている必要があります。
 
 ## metadata.json の構造
 
@@ -59,3 +109,4 @@
 |1|Forensics|データを解析しフラグを得る問題|
 |2|Cryptography|暗号を解きフラグを得る問題|
 |3|Reverse Engineering|プログラムをリバースエンジニアリングし、フラグを得る問題|
+|4|General Skills|それぞれのジャンルが混合/それ以外の知識を用いてフラグを得る問題|
