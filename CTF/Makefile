@@ -1,12 +1,13 @@
 .PHONY: all
-all: 2022/2nd/0.c.elf 2022/2nd/1.c.elf 2022/2nd/2.c.elf 2022/2nd/3.c.elf
+all: ctflib 2022/2nd/0.c.elf 2022/2nd/1.c.elf 2022/2nd/2.c.elf 2022/2nd/3.c.elf
+
+.PHONY: ctflib
+ctflib:
+	@make -C ../../../docker_image
 
 LIBCTF:=c_lib/libctf.a
 
 FLAGS:=-Wall -Wextra -Werror -no-pie -O0 -I c_lib/include -g
-
-$(LIBCTF): c_lib/src
-	@make -C c_lib
 
 2022/2nd/%.c.elf: 2022/2nd/%.c $(LIBCTF)
 	@printf "> \x1b[32mBuilding $@ with Stack=Exec|NonPotected no-PIE\x1b[0m\n"

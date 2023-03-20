@@ -1,0 +1,19 @@
+{
+  "name": "Basic Exploitation",
+  "author": "syoch",
+  "description": "This is a basic exploitation challenge. It's a good starting point for beginners.",
+  "category": 0,
+  "flag_hash": "77a6412cad754b31e8b76c5133827617b0d26614d067c42e8fcd3192b2640db2",
+  "hints": [
+    "Buffer Overflow",
+    "Memory structure"
+  ],
+  "tasks": {
+    "init": "gcc -no-pie -zexecstack -fno-stack-protector main.c -o main",
+    "runtime": "./main",
+    "daemon": ":"
+  },
+  "files": {
+    "vuln": "main"
+  }
+}

@@ -3,5 +3,8 @@
     "*.meson": "meson",
     "stdlib.h": "c",
     "stdio.h": "c"
-  }
+  },
+  "cSpell.words": [
+    "stackexec"
+  ]
 }
