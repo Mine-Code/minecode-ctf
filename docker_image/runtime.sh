@@ -35,6 +35,9 @@ case $1 in
     debug)
         execute "exec $SHELL"
         ;;
+    root)
+        exec $SHELL
+        ;;
     *)
         echo "Unknown command: $1"
         exit 1

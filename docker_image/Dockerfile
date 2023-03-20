@@ -5,6 +5,8 @@ WORKDIR /mnt
 RUN apt-get update; \
   apt-get install --no-install-recommends -y g++=4:7.4.0-1ubuntu2.3; \
   apt-get install --no-install-recommends -y jq=1.5+dfsg-2; \
+  apt-get install --no-install-recommends -y python3=3.6.5-3; \
+  apt-get install --no-install-recommends -y nodejs=8.10.0~dfsg-2; \
   rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m ctf
