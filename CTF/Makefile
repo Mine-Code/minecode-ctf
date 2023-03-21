@@ -3,7 +3,7 @@ all: ctflib 2022/2nd/0.c.elf 2022/2nd/1.c.elf 2022/2nd/2.c.elf 2022/2nd/3.c.elf
 
 .PHONY: ctflib
 ctflib:
-	@make -C ../../../docker_image
+	@make -C ../../../docker_image/
 
 LIBCTF:=c_lib/libctf.a
 
