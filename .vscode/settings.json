@@ -2,9 +2,17 @@
   "files.associations": {
     "*.meson": "meson",
     "stdlib.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "string.h": "c"
   },
   "cSpell.words": [
     "stackexec"
-  ]
+  ],
+  "saveAndRun": {
+    "commands": [
+      {
+        "cmd": "make -C .vscode/problems/3/"
+      }
+    ]
+  }
 }

@@ -1,9 +1,6 @@
 const express = require('express');
 const ws = require('ws');
-const child_process = require("child_process");
-const WsStream = require('wsstream');
-const net = require('net');
-const problems = require('./datas');
+const problems = require('./datas/_index');
 
 const app = express();
 
@@ -25,6 +22,18 @@ function withTimeOut(p, timeout, as_error = true) {
     });
   });
 }
+
+class DockerWrapper {
+  /** @argument {String} problem_path */
+  constructor(problem_path) {
+    this.problem_path = problem_path;
+    this.process = null;
+    this.onMessage = (data) => { };
+    this.onDisconnect = (code) => { };
+    this.onConnect = () => { };
+  }
+}
+
 
 app.get('/test/:app/:json', async function (req, res) {
   const problem = problems.resolveProblem(req.params.app);
@@ -68,7 +77,7 @@ wsServer.on('connection', (socket, req) => {
     socket.send("[Websocket Handler] Error: Invalid Ws Path format\n");
     socket.send("[Websocket Handler]   Correct Format: /interactive/{AppName}\"");
     socket.send("[Websocket Handler]          Example: /interactive/2022_2nd_0\n");
-    socket.send("[Websocket Handler] Secret Flag: mineCTF{F1nD1nG_B4cK3nD_4p1_W3bS0cK37}\n");
+    socket.send("[Websocket Handler] Secret Flag: sf0\n");
     socket.send("[Websocket Handler] You can input this key in the hamburger menu\n");
     socket.close();
     return;
@@ -78,7 +87,7 @@ wsServer.on('connection', (socket, req) => {
   if (!problem) {
     socket.send("[Websocket Handler] Error: Unknown App has selected.\n");
     socket.send(`[Websocket Handler]   Available App: ${JSON.stringify()}\n`);
-    socket.send("[Websocket Handler] Secret Flag: mineCTF{1Nv4L1d_B4cK3nD_4p1_1NpU7}\n");
+    socket.send("[Websocket Handler] Secret Flag: sf1\n");
     socket.send("[Websocket Handler] You can input this key in the hamburger menu\n");
     socket.close();
     return;
@@ -104,7 +113,7 @@ wsServer.on('connection', (socket, req) => {
   });
 });
 
-const server = app.listen(3000, () => {
+const server = app.listen(process.env.PORT || 3000, () => {
   console.log('[Server] CTF Server started');
 });
 
