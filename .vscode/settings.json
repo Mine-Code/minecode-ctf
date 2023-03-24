@@ -11,7 +11,7 @@
   "saveAndRun": {
     "commands": [
       {
-        "cmd": "make -C .vscode/problems/3/"
+        "cmd": "make -C .vscode/problems"
       }
     ]
   }
