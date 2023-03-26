@@ -1,19 +1,19 @@
 
-import problemManager from "./server/datas/problem_manager.js";
+import problemManager from "./datas/problem_manager.js";
 
 let f = false;
 
 async function ent() {
   await problemManager.initalizeAllProblems();
   console.log(problemManager.getProblemHashes());
-  let p = problemManager.getProblemWithHash("a7d28a5b02b848d10b0d463ac2d88bf9");
+  let p = problemManager.getProblemWithHash("c54bc07541eae5a7ece61fbce94c1466");
   let r = p.runtime();
-  r.writeStdin("test95039503905390539\n");
+  r.writeStdin("test\n");
   r = await r;
 
   console.log("Done initalization");
   console.log("-----");
-  console.log(r)
+  console.log(r);
   console.log("-----");
 
   f = true;
