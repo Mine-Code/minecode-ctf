@@ -1,21 +1,16 @@
 import Category from "./category.js";
 
 class CategoryManager {
+  categories: Category[];
   constructor() {
-    /** @type {Category[]} */
     this.categories = [];
   }
 
-  /** @argument {Category} category */
-  addCategory(category) {
+  addCategory(category: Category) {
     this.categories.push(category);
   }
 
-  /**
-   * @argument {number} id
-   * @returns {Category | null}
-   */
-  getCategory(id) {
+  getCategory(id: number): Category | null {
     return this.categories.find((category) => category.id === id) || null;
   }
 }

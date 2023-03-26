@@ -1,22 +1,17 @@
-/** @typedef {(string)=>()} StringHandler */
-/** @typedef {()=>()} EventHandler */
-
 import { join } from "path";
 
 import RawProcessWrapper from "./raw_process_wrapper.js";
 
 export default class DockerWorker {
-  /**
-   * @argument {string} problem_path
-   * @argument {string} command
-   */
-  constructor(problem_path, command) {
+  private cp: RawProcessWrapper;
+  private buffer: string[];
+  private return_code: number | null;
+
+  constructor(public problem_path: string, public command: string) {
     this.cp = new RawProcessWrapper(`docker run -v ${join(process.cwd(), problem_path)}:/mnt -i --rm minecode-ctf-runner ${command}`);
 
-    /** @type {string[]} */
     this.buffer = [];
 
-    /** @type {number | null} */
     this.return_code = null;
 
     this.cp.onMessage((data_) => {
@@ -25,18 +20,18 @@ export default class DockerWorker {
     });
   }
 
-  writeStdin(/** @type {String} */ data) {
+  writeStdin(data: string) {
     this.cp.writeStdin(data);
   }
 
-  onMessage(/** @type {StringHandler} */ handler) {
+  onMessage(handler: (data: string) => void) {
     for (const data of this.buffer) {
       handler(data);
     }
     this.cp.onMessage(handler);
   }
 
-  onDisconnect(/** @type {EventHandler} */ handler) {
+  onDisconnect(handler: () => void) {
     this.cp.onDisconnect(handler);
   }
 }

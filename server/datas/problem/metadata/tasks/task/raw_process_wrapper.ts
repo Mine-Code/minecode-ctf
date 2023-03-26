@@ -1,0 +1,34 @@
+import { spawn, ChildProcess } from "child_process";
+
+// type StringHandler = (string) => ();
+// type EventHandler = () => ();
+
+export default class RawProcessWrapper {
+  private cp: ChildProcess;
+
+  constructor(exec: string) {
+    this.cp = spawn(exec, {
+      shell: true
+    });
+  }
+
+  writeStdin(data: string) {
+    this.cp.stdin?.write(data);
+  }
+
+  onMessage(handler: (data: string) => void) {
+    this.cp.stdout?.on("data", (data) => {
+      handler(data);
+    });
+    this.cp.stderr?.on("data", (data) => {
+      handler(data);
+    });
+    this.cp.on("data", (data) => {
+      handler(data);
+    });
+  }
+
+  onDisconnect(handler: () => void) {
+    this.cp.on("exit", handler);
+  }
+}

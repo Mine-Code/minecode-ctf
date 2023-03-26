@@ -1,9 +1,6 @@
 class Category {
-  /**
-   * @param {id} id
-   * @param {string} name
-   */
-  constructor(id, name) {
+
+  constructor(public id: number, public name: string) {
     this.id = id;
     this.name = name;
   }

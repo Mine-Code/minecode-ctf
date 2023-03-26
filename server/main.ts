@@ -1,10 +1,30 @@
-const express = require('express');
-const ws = require('ws');
-const problems = require('./datas/_index');
+import express from "express";
+import { Server as WSServer } from "ws";
+import problems from "./datas/problem_manager.js"
 
-const app = express();
+Bun.serve({
+  port: (process.env.PORT ? parseInt(process.env.PORT) : null) || 3000,
 
-/** @argument {Promise} p */
+  fetch(req, server) {
+    if (req.url.match(/\/interactive\/(.*)$/) && server.upgrade(req)) return;
+
+
+    return app(req, server);
+  },
+  websocket: {
+    open(ws) {
+
+    }, // a socket is opened
+    message(ws, message) { }, // a message is received
+    close(ws, code, message) { }, // a socket is closed
+    drain(ws) { }, // the socket is ready to receive more data
+  },
+});
+
+/**
+ * @argument {Promise<T>} p
+ * @returns {Promise<T>}
+ */
 function withTimeOut(p, timeout, as_error = true) {
   return new Promise((resolve, reject) => {
     let timer = setTimeout(() => {
@@ -23,20 +43,8 @@ function withTimeOut(p, timeout, as_error = true) {
   });
 }
 
-class DockerWrapper {
-  /** @argument {String} problem_path */
-  constructor(problem_path) {
-    this.problem_path = problem_path;
-    this.process = null;
-    this.onMessage = (data) => { };
-    this.onDisconnect = (code) => { };
-    this.onConnect = () => { };
-  }
-}
-
-
-app.get('/test/:app/:json', async function (req, res) {
-  const problem = problems.resolveProblem(req.params.app);
+app.get('/test/:hash/:json', async function (req, res) {
+  const problem = problems.getProblemWithHash(req.params.hash);
   if (!problem) {
     res.send("Unknown App has selected.");
     return;
@@ -52,24 +60,18 @@ app.get('/test/:app/:json', async function (req, res) {
       padStart(2, "0")}`
     ).join("");
 
-  let buffer = "";
-  let c = 0;
-  const sess = problem.start();
-  sess.onMessage((data) => {
-    buffer += data;
-  });
-  sess.passMessage(escaped);
-  sess.onDisconnect((code) => {
-    c = code;
-  });
-  await withTimeOut(sess.waitExit(), 2, false);
+  let task = problem.runtime();
 
-  let r = JSON.stringify({ buffer: buffer, c: c });
+  task.writeStdin(escaped);
+
+  /** @type {string} */
+  let output = await withTimeOut(task, 2, false);
+
+  let r = JSON.stringify({ buffer: output });
   res.send(r);
 });
 
-
-const wsServer = new ws.Server({ noServer: true });
+const wsServer = new WSServer({ noServer: true });
 
 wsServer.on('connection', (socket, req) => {
   let match = req.url.match(/\/interactive\/(.*)$/);

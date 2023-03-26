@@ -3,13 +3,12 @@ import path from "path";
 import Metadata from "./metadata/metadata.js";
 
 export default class Problem {
-  /** @argument {string} problem_path */
-  constructor(problem_path) {
-    this.problem_path = problem_path;
+  metadata: Metadata;
 
+  constructor(public problem_path: string) {
     const metadata_string = readFileSync(
       path.join(problem_path, "metadata.json"),
-    );
+    ).toString();
     const metadata_object = JSON.parse(metadata_string);
     this.metadata = new Metadata(problem_path, metadata_object);
   }
