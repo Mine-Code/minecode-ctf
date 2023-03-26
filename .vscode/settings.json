@@ -11,7 +11,7 @@
   "saveAndRun": {
     "commands": [
       {
-        "cmd": "make -C .vscode/problems"
+        "cmd": "./run_server.sh"
       }
     ]
   }
