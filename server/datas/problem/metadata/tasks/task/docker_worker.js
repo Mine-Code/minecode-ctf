@@ -1,4 +1,4 @@
-/** @typedef {(String)=>()} StringHandler */
+/** @typedef {(string)=>()} StringHandler */
 /** @typedef {()=>()} EventHandler */
 
 import { join } from "path";
