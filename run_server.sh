@@ -2,6 +2,8 @@
 
 set -e
 
+PROBLEM_CONTAINERS=""
+
 untar_problems() {
   printf "\e[1;32mUntaring problems...\e[0m\n"
 
@@ -32,7 +34,8 @@ init_problems() {
 
     cd $problem
 
-    docker run -itv $PWD:/mnt minecode-ctf-runner .mc_ctf/init.sh &
+    CID=$(docker run -div $PWD:/mnt minecode-ctf-runner .mc_ctf/init.sh &)
+    printf "\e[2;32m    => $CID\e[0m\n"
 
     cd $p
   done
@@ -42,7 +45,6 @@ init_problems() {
 
 start_problem_daemons() {
   printf "\e[1;32mStarting daemon processes\e[0m\n"
-  PROBLEM_CONTAINERS=""
   for problem in $(echo $PROBLEMS | tr ',' '\n'); do
     p=$PWD
     printf "\e[32m  Starting at $problem\e[0m\n"
@@ -63,13 +65,13 @@ export PROBLEMS=$(find problems -name "metadata.json" | xargs dirname | tr '\n' 
 
 init_problems
 
-# start_problem_daemons
+start_problem_daemons
 
 printf "\e[1;32mSetup metadata.json owner\e[0m\n"
 find . -name "metadata.json" | xargs sudo chown $USER
 
 printf "\e[1;32mStarting main program\e[0m\n"
-bun server/main.ts
+set +e; bun server/main.ts; set -e
 
 printf "\e[1;32mRestore metadata.json owner\e[0m\n"
 find . -name "metadata.json" | xargs sudo chown $USER
@@ -79,4 +81,5 @@ for cid in $PROBLEM_CONTAINERS; do
   printf "\e[32m  Stopping $cid\e[0m\n"
   docker stop $cid &
 done
+
 wait
