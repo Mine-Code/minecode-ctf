@@ -1,4 +1,4 @@
-import { spawn, ChildProcess } from "child_process";
+import { spawn, ChildProcess, ChildProcessByStdio } from "child_process";
 
 // type StringHandler = (string) => ();
 // type EventHandler = () => ();
