@@ -7,7 +7,7 @@ export default class TaskFactory {
     this.command = command;
   }
 
-  execute() {
+  execute(timeout: number = 2) {
     let worker = new DockerWorker(this.problem_path, this.command);
     let output = "";
     worker.onMessage((data) => {
@@ -27,8 +27,18 @@ export default class TaskFactory {
       onMessage(handler: (data: string) => void) {
         worker.onMessage(handler);
       },
-      async check_output() {
-        return await promise;
+      checkOutputWithTimeout(timeout: number): Promise<string> {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(output);
+          }, timeout * 1000);
+          worker.onDisconnect(() => resolve(output));
+        })
+      },
+      check_output(): Promise<string> {
+        return new Promise((resolve) => {
+          worker.onDisconnect(() => resolve(output));
+        });
       }
     };
   }

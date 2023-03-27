@@ -1,10 +1,12 @@
 import Problem from "./problem.js";
 import { createHash } from "crypto";
 class ProblemManager {
-  constructor() {
-    this.problem_paths = process.env.PROBLEMS.split(",");
+  problems: Problem[];
 
-    this.problems = this.problem_paths.map(x => new Problem(x));
+  constructor() {
+    const problem_paths = (process.env.PROBLEMS ?? "").split(",");
+
+    this.problems = problem_paths.map(x => new Problem(x));
   }
 
   getCurrentProblems() {
@@ -16,11 +18,7 @@ class ProblemManager {
     return Object.fromEntries(arr);
   }
 
-  /**
-   *
-   * @param {string} hash problem_path hash(MD5)
-   */
-  getProblemWithHash(hash) {
+  getProblemWithHash(hash: string) {
     return this.problems.find(x => createHash("MD5").update(x.problem_path).digest("hex") === hash);
   }
 

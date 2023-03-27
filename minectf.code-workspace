@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../ghq/github.com/Mine-Code/CTF-ProblemSDK"
+		},
+		{
+			"path": "../../ghq/github.com/Mine-Code/ctf-runtime"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.meson": "meson",
+			"stdlib.h": "c",
+			"stdio.h": "c",
+			"string.h": "c"
+		}
+	}
+}

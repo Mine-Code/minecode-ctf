@@ -36,11 +36,13 @@ export default class Metadata {
     }
 
     this.description = obj.description;
-    if (!this.description) {
+    if (!this.description && obj.description !== "") {
+      console.log(obj);
       throw new Error("Problem description is not specified or empty");
     }
 
-    if (!obj.category) {
+    if (!obj.category && obj.category !== 0) {
+      console.log(obj)
       throw new Error("Problem category is not specified or empty");
     }
     const category = categoryManager.getCategory(obj.category);
