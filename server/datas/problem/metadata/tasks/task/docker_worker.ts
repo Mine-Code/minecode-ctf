@@ -34,4 +34,8 @@ export default class DockerWorker {
   onDisconnect(handler: () => void) {
     this.cp.onDisconnect(handler);
   }
+
+  kill() {
+    this.cp.kill();
+  }
 }

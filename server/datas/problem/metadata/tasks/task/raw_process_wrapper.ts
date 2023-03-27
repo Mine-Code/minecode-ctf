@@ -8,7 +8,8 @@ export default class RawProcessWrapper {
 
   constructor(exec: string) {
     this.cp = spawn(exec, {
-      shell: true
+      shell: true,
+      stdio: ["pipe", "pipe", "pipe"],
     });
   }
 
@@ -30,5 +31,8 @@ export default class RawProcessWrapper {
 
   onDisconnect(handler: () => void) {
     this.cp.on("exit", handler);
+  }
+  kill() {
+    this.cp.kill();
   }
 }
