@@ -8,7 +8,7 @@ export default class DockerWorker {
   private return_code: number | null;
 
   constructor(public problem_path: string, public command: string) {
-    this.cp = new RawProcessWrapper(`docker run -v ${join(process.cwd(), problem_path)}:/mnt -i --rm minecode-ctf-runner ${command}`);
+    this.cp = new RawProcessWrapper(`docker run -v ${join(process.cwd(), problem_path)}:/mnt -i --rm minecode-ctf-runner stdbuf -i0 -o0 -e0 ${command}`);
 
     this.buffer = [];
 

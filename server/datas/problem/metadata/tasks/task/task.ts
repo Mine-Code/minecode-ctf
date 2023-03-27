@@ -6,7 +6,6 @@ export class Task {
 
   constructor(public worker: DockerWorker) {
     worker.onMessage((data) => {
-      console.log(data)
       this.output += data;
     });
     worker.onDisconnect(() => {
