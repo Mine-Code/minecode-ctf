@@ -58,6 +58,19 @@ start_problem_daemons() {
     cd $p
   done
 }
+cleanup () {
+  printf "\e[1;32mRestore metadata.json owner\e[0m\n"
+  find . -name "metadata.json" | xargs sudo chown $USER
+
+  printf "\e[1;32mStopping Daemon tasks\e[0m\n"
+  for cid in $PROBLEM_CONTAINERS; do
+    printf "\e[32m  Stopping $cid\e[0m\n"
+    docker stop $cid &
+  done
+
+  wait
+}
+trap cleanup EXIT
 
 untar_problems
 
@@ -72,14 +85,3 @@ find . -name "metadata.json" | xargs sudo chown $USER
 
 printf "\e[1;32mStarting main program\e[0m\n"
 set +e; bun server/main.ts; set -e
-
-printf "\e[1;32mRestore metadata.json owner\e[0m\n"
-find . -name "metadata.json" | xargs sudo chown $USER
-
-printf "\e[1;32mStopping Daemon tasks\e[0m\n"
-for cid in $PROBLEM_CONTAINERS; do
-  printf "\e[32m  Stopping $cid\e[0m\n"
-  docker stop $cid &
-done
-
-wait
