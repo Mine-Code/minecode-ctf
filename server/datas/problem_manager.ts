@@ -1,29 +1,48 @@
-import Problem from "./problem.js";
-import { createHash } from "crypto";
+import { IProblem } from "../ctf";
+import { ProblemManager as Super } from "../ctf/problem_manager.js";
+import { problemFromEnv } from "../ctf/problem_provider.js";
+import { Task } from "./problem/metadata/tasks/task/task";
+
+function problem_compatible_layer(super_problem: IProblem) {
+  return {
+    runtime: () => {
+      return new Task(super_problem.spawnProblem());
+    },
+  };
+}
+
 class ProblemManager {
-  problems: Problem[];
+  super_manager: Super;
 
   constructor() {
-    const problem_paths = (process.env.PROBLEMS ?? "").split(",");
-
-    this.problems = problem_paths.map(x => new Problem(x));
+    this.super_manager = new Super(problemFromEnv);
   }
 
   getCurrentProblems() {
-    return this.problems;
+    const problems = this.super_manager.getProblems();
+
+    const problem_objects: { [hash: string]: any } = {};
+    for (const hash in problems) {
+      const super_problem = problems[hash];
+      const problem_object = problem_compatible_layer(super_problem);
+      problem_objects[hash] = problem_object;
+    }
+
+    return problem_objects;
   }
 
   getProblemHashes() {
-    const arr = this.problems.map(x => [x.metadata.name, createHash("MD5").update(x.problem_path).digest("hex")]);
-    return Object.fromEntries(arr);
+    const problems = this.super_manager.getProblems();
+    return Object.keys(problems);
   }
 
   getProblemWithHash(hash: string) {
-    return this.problems.find(x => createHash("MD5").update(x.problem_path).digest("hex") === hash);
+    const problem = this.super_manager.getProblemByHash(hash);
+    return problem ? problem_compatible_layer(problem) : null;
   }
 
-  initalizeAllProblems() {
-    return Promise.all(this.problems.map(x => x.init()));
+  async initalizeAllProblems() {
+    await this.super_manager.init();
   }
 }
 
