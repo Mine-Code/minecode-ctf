@@ -7,6 +7,4 @@ export {
 } from "./process";
 export { IWorker, DockerWorker } from "./worker";
 export { ProblemManager } from "./problem_manager";
-
-import { IProblem } from "./problem";
-export type ProblemProvider = () => Promise<IProblem[]>;
+export { ProblemProvider, problemFromEnv } from "./problem_provider";
