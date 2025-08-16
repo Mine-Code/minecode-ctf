@@ -5,4 +5,8 @@ pkgs.mkShell {
     websocat
     socat
   ];
+
+  shellHook = ''
+    bun install
+  '';
 }

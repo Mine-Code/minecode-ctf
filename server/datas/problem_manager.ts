@@ -16,6 +16,18 @@ class ProblemManager {
 
   constructor() {
     this.super_manager = new Super(problemFromEnv);
+
+    this.super_manager
+      .init()
+      .then(() => {
+        console.log(
+          "ProblemManager initialized with problems:",
+          this.getProblemHashes()
+        );
+      })
+      .catch((error) => {
+        console.error("Error initializing ProblemManager:", error);
+      });
   }
 
   getCurrentProblems() {
