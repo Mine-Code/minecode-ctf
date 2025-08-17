@@ -3,6 +3,12 @@ import { IWorker } from ".";
 import { IProcess, wait_for_process } from "../process";
 import { HostProcess, DockerProcess } from "../process";
 
+export type DockerWorkerInitResult =
+  | { kind: "Success" }
+  | { kind: "Timeout" }
+  | { kind: "DockerRunFailed"; output: string; exit_code: number }
+  | { kind: "OutputMalformed"; output: string };
+
 export class DockerWorker implements IWorker {
   private docker_container_id: string | null = null;
   private problem_base: string;
@@ -10,22 +16,40 @@ export class DockerWorker implements IWorker {
     this.problem_base = join(process.cwd(), problem_path);
   }
 
-  async init() {
+  async init(): Promise<DockerWorkerInitResult> {
     const p = new HostProcess(
       `docker run -v ${this.problem_base}:/mnt -di --rm ${this.docker_image} sleep infinity`
     );
+
+    let output = "";
     p.onOut((data) => {
-      const output = data.toString().trim();
-      // コンテナIDは64文字の英数字
-      if (output.match(/^[a-z0-9]{64}$/)) {
-        this.docker_container_id = output;
-        console.log(
-          `Docker container started with ID: ${this.docker_container_id}`
-        );
-      }
+      output += data;
     });
 
-    await wait_for_process(p, 5000);
+    const result = await wait_for_process(p, 5000);
+    if (result.kind === "Timeout") {
+      return { kind: "Timeout" };
+    } else if (result.kind === "ProcessExitedWithError") {
+      return {
+        kind: "DockerRunFailed",
+        output: output,
+        exit_code: result.exit_code,
+      };
+    }
+
+    // コンテナIDは64文字の英数字
+    if (!output.trim().match(/^[a-z0-9]{64}$/)) {
+      return {
+        kind: "OutputMalformed",
+        output: output,
+      };
+    }
+
+    this.docker_container_id = output.trim();
+    console.log(
+      `Docker container started with ID: ${this.docker_container_id}`
+    );
+    return { kind: "Success" };
   }
 
   async cleanup() {
@@ -33,10 +57,6 @@ export class DockerWorker implements IWorker {
       const p = new HostProcess(
         `docker container kill ${this.docker_container_id}`
       );
-      p.onOut((data) => {
-        console.log(`Docker container stopped: ${data}`);
-      });
-
       await wait_for_process(p, 5000);
       this.docker_container_id = null;
       console.log("Docker container closed successfully.");
