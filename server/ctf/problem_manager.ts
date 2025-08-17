@@ -12,6 +12,17 @@ export class ProblemManager {
       acc[problem.getHash()] = problem;
       return acc;
     }, {} as { [hash: string]: IProblem });
+
+    globalThis.process.on("SIGINT", async () => {
+      console.log("Doing cleanup...");
+      await this.cleanup();
+      globalThis.process.exit(0);
+    });
+    globalThis.process.on("SIGTERM", async () => {
+      console.log("Doing cleanup...");
+      await this.cleanup();
+      globalThis.process.exit(0);
+    });
   }
 
   getProblems() {
