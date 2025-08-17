@@ -11,14 +11,14 @@ export class DockerWorker implements IWorker {
   }
 
   async init() {
-    // run container and get id
     const p = new HostProcess(
       `docker run -v ${this.problem_base}:/mnt -di --rm ${this.docker_image} sleep infinity`
     );
     p.onOut((data) => {
-      const match = data.toString().trim();
-      if (match) {
-        this.docker_container_id = match;
+      const output = data.toString().trim();
+      // コンテナIDは64文字の英数字
+      if (output.match(/^[a-z0-9]{64}$/)) {
+        this.docker_container_id = output;
         console.log(
           `Docker container started with ID: ${this.docker_container_id}`
         );
