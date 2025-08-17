@@ -18,7 +18,7 @@ export function wait_for_process(
   timeout: number = 10000
 ): Promise<ProcessWaitResult> {
   return new Promise((resolve, reject) => {
-    let timer: number | null = null;
+    let timer: ReturnType<typeof setTimeout> | null = null;
     process.onExit((code) => {
       if (timer !== null) {
         clearTimeout(timer);

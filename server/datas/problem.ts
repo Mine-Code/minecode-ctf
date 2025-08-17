@@ -1,3 +1,3 @@
-import Problem from "./problem/problem.js";
+import Problem from "./problem/problem";
 
 export default Problem;
