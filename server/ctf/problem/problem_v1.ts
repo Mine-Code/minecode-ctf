@@ -5,6 +5,7 @@ import { IProcess, wait_for_process } from "../process";
 
 export class ProblemV1 implements IProblem {
   problem_hash: string;
+  daemon_process: IProcess | null = null;
 
   constructor(private problem_path: string, private worker: IWorker) {
     this.problem_hash = createHash("MD5").update(problem_path).digest("hex");
@@ -26,8 +27,8 @@ export class ProblemV1 implements IProblem {
     });
     await wait_for_process(p, 10000);
 
-    const p2 = this.worker.spawn("/mnt/.mc_ctf/daemon.sh");
-    p2.onOut((data) => {
+    this.daemon_process = this.worker.spawn("/mnt/.mc_ctf/daemon.sh");
+    this.daemon_process.onOut((data) => {
       console.log(`Daemon output: ${data}`);
     });
   }
