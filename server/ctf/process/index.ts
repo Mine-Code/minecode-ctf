@@ -8,10 +8,15 @@ export interface IProcess {
   kill(): void;
 }
 
+type ProcessWaitResult =
+  | { kind: "ProcessExited" }
+  | { kind: "Timeout" }
+  | { kind: "ProcessExitedWithError"; exit_code: number };
+
 export function wait_for_process(
   process: IProcess,
   timeout: number = 10000
-): Promise<void> {
+): Promise<ProcessWaitResult> {
   return new Promise((resolve, reject) => {
     let timer: number | null = null;
     process.onExit((code) => {
@@ -21,14 +26,15 @@ export function wait_for_process(
       }
 
       if (code === 0) {
-        resolve();
+        resolve({ kind: "ProcessExited" });
       } else {
-        reject(new Error(`Process exited with code ${code}`));
+        resolve({ kind: "ProcessExitedWithError", exit_code: code });
       }
     });
     timer = setTimeout(() => {
       process.kill();
-      reject(new Error("Process timed out"));
+      timer = null;
+      resolve({ kind: "Timeout" });
     }, timeout);
   });
 }
