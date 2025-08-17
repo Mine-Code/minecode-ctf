@@ -23,9 +23,6 @@ export class HostProcess implements IProcess {
     this.cp.stderr?.on("data", (data) => {
       handler(data);
     });
-    this.cp.on("data", (data) => {
-      handler(data);
-    });
   }
 
   onExit(handler: (code: number) => void) {
