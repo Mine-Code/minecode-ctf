@@ -27,15 +27,17 @@ export class ProblemV1 implements IProblem {
     });
 
     const initWaitingResult = await wait_for_process(p, 10000);
-    if (initWaitingResult.kind === "Timeout") {
-      console.error("Problem initialization timed out.");
-      return { result: "InitializationTimeout" };
-    } else if (initWaitingResult.kind === "ProcessExitedWithError") {
-      console.error("Problem initialization failed with an error.");
-      return {
-        result: "InitializationError",
-        exit_code: initWaitingResult.exit_code,
-      };
+    if (!initWaitingResult.success) {
+      if (initWaitingResult.error_kind === "Timeout") {
+        console.error("Problem initialization timed out.");
+        return { result: "InitializationTimeout" };
+      } else if (initWaitingResult.error_kind === "ProcessExitedWithError") {
+        console.error("Problem initialization failed with an error.");
+        return {
+          result: "InitializationError",
+          exit_code: initWaitingResult.exit_code,
+        };
+      }
     }
 
     this.daemon_process = this.worker.spawn("/mnt/.mc_ctf/daemon.sh");

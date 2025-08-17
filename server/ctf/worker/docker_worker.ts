@@ -4,10 +4,15 @@ import { IProcess, wait_for_process } from "../process";
 import { HostProcess, DockerProcess } from "../process";
 
 export type DockerWorkerInitResult =
-  | { kind: "Success" }
-  | { kind: "Timeout" }
-  | { kind: "DockerRunFailed"; output: string; exit_code: number }
-  | { kind: "OutputMalformed"; output: string };
+  | { success: true }
+  | { success: false; error_kind: "Timeout" }
+  | {
+      success: false;
+      error_kind: "DockerRunFailed";
+      output: string;
+      exit_code: number;
+    }
+  | { success: false; error_kind: "OutputMalformed"; output: string };
 
 export class DockerWorker implements IWorker {
   private docker_container_id: string | null = null;
@@ -27,20 +32,24 @@ export class DockerWorker implements IWorker {
     });
 
     const result = await wait_for_process(p, 5000);
-    if (result.kind === "Timeout") {
-      return { kind: "Timeout" };
-    } else if (result.kind === "ProcessExitedWithError") {
-      return {
-        kind: "DockerRunFailed",
-        output: output,
-        exit_code: result.exit_code,
-      };
+    if (!result.success) {
+      if (result.error_kind === "Timeout") {
+        return { success: false, error_kind: "Timeout" };
+      } else if (result.error_kind === "ProcessExitedWithError") {
+        return {
+          success: false,
+          error_kind: "DockerRunFailed",
+          output: output,
+          exit_code: result.exit_code,
+        };
+      }
     }
 
     // コンテナIDは64文字の英数字
     if (!output.trim().match(/^[a-z0-9]{64}$/)) {
       return {
-        kind: "OutputMalformed",
+        success: false,
+        error_kind: "OutputMalformed",
         output: output,
       };
     }
@@ -49,7 +58,7 @@ export class DockerWorker implements IWorker {
     console.log(
       `Docker container started with ID: ${this.docker_container_id}`
     );
-    return { kind: "Success" };
+    return { success: true };
   }
 
   async cleanup() {

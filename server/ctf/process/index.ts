@@ -9,9 +9,9 @@ export interface IProcess {
 }
 
 type ProcessWaitResult =
-  | { kind: "ProcessExited" }
-  | { kind: "Timeout" }
-  | { kind: "ProcessExitedWithError"; exit_code: number };
+  | { success: true }
+  | { success: false; error_kind: "Timeout" }
+  | { success: false; error_kind: "ProcessExitedWithError"; exit_code: number };
 
 export function wait_for_process(
   process: IProcess,
@@ -26,15 +26,19 @@ export function wait_for_process(
       }
 
       if (code === 0) {
-        resolve({ kind: "ProcessExited" });
+        resolve({ success: true });
       } else {
-        resolve({ kind: "ProcessExitedWithError", exit_code: code });
+        resolve({
+          success: false,
+          error_kind: "ProcessExitedWithError",
+          exit_code: code,
+        });
       }
     });
     timer = setTimeout(() => {
       process.kill();
       timer = null;
-      resolve({ kind: "Timeout" });
+      resolve({ success: false, error_kind: "Timeout" });
     }, timeout);
   });
 }
