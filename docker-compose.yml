@@ -31,16 +31,6 @@ services:
     networks:
       - ctf-network
 
-  work:
-    build:
-      context: work
-      dockerfile: Dockerfile
-    ports:
-      - "38192:22"
-    init: true
-    networks:
-      - ctf-network
-
 volumes:
   mcc-ctfd:
     driver: local
