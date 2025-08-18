@@ -8,6 +8,12 @@ services:
     restart: unless-stopped
     networks:
       - ctf-network
+    user: root
+    init: true
+    entrypoint: ["/entry.sh"]
+    volumes:
+      - ./ctfd/entry.sh:/entry.sh
+      - mcc-ctfd:/opt/storage:rw
 
   backend:
     build:
@@ -34,6 +40,10 @@ services:
     init: true
     networks:
       - ctf-network
+
+volumes:
+  mcc-ctfd:
+    driver: local
 
 networks:
   ctf-network:
