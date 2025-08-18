@@ -5,7 +5,8 @@ ENV CTF_RUNTIME_PATH=/tmp/ctf-runtime
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
   ca-certificates=20240203 \
-  curl=8.5.0-2ubuntu10.6 \
+  ca-certificates \
+  curl \
   unzip && \
   rm -rf /var/lib/apt/lists/* && \
   curl -fsSL https://get.docker.com | sh && \

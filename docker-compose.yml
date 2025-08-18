@@ -8,7 +8,6 @@ services:
     restart: unless-stopped
     networks:
       - ctf-network
-    user: root
     init: true
     entrypoint: ["/entry.sh"]
     volumes:
@@ -18,7 +17,6 @@ services:
   backend:
     build:
       dockerfile: Dockerfile
-    privileged: true
     volumes:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
