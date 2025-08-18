@@ -1,4 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env sh
+
+cd `dirname $0`
+
+if [ ! -z "$CTF_RUNTIME_PATH" ]; then
+  printf "\e[1;32mBuilding minecode-ctf-runner\e[0m\n"
+  docker build -t minecode-ctf-runner $CTF_RUNTIME_PATH
+fi
+
+if [ -z "$BUN_INSTALL" ]; then
+  BUN=bun
+else
+  BUN=$BUN_INSTALL/bin/bun
+fi
 
 set -e
 
@@ -84,4 +97,4 @@ printf "\e[1;32mSetup metadata.json owner\e[0m\n"
 find . -name "metadata.json" | xargs sudo chown $USER
 
 printf "\e[1;32mStarting main program\e[0m\n"
-set +e; bun server/main.ts; set -e
+set +e; $BUN server/main.ts; set -e
