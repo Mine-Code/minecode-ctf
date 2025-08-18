@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  ctfd:
+    image: ctfd/ctfd
+    container_name: ctfd
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - ctf-network
+
+  backend:
+    build:
+      dockerfile: Dockerfile
+    container_name: backend
+    privileged: true
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "3000:3000"
+    command: /app/run_server_bundled.sh
+    restart: "no"
+    networks:
+      - ctf-network
+
+networks:
+  ctf-network:
+    driver: bridge
