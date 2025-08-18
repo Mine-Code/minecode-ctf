@@ -1,0 +1,3 @@
+[submodule "ctf-runtime"]
+	path = ctf-runtime
+	url = git@github.com:Mine-Code/ctf-runtime
