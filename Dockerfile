@@ -16,3 +16,6 @@ ENV BUN_INSTALL="/root/.bun"
 
 COPY ctf-runtime /tmp/ctf-runtime
 ENV CTF_RUNTIME_PATH=/tmp/ctf-runtime
+
+RUN echo "" > /usr/bin/sudo
+RUN chmod +x /usr/bin/sudo

@@ -3,7 +3,6 @@ version: '3.8'
 services:
   ctfd:
     image: ctfd/ctfd
-    container_name: ctfd
     ports:
       - "8000:8000"
     restart: unless-stopped
@@ -13,15 +12,26 @@ services:
   backend:
     build:
       dockerfile: Dockerfile
-    container_name: backend
     privileged: true
     volumes:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "3000:3000"
-    command: /app/run_server_bundled.sh
-    restart: "no"
+    init: true
+    command: /app/run_server.sh
+    entrypoint: ["/bin/bash"]
+    restart: unless-stopped
+    networks:
+      - ctf-network
+
+  work:
+    build:
+      context: work
+      dockerfile: Dockerfile
+    ports:
+      - "38192:22"
+    init: true
     networks:
       - ctf-network
 
