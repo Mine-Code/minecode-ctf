@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  ctfd:
+    image: ctfd/ctfd
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - ctf-network
+    init: true
+    entrypoint: ["/entry.sh"]
+    volumes:
+      - ./ctfd/entry.sh:/entry.sh
+      - mcc-ctfd:/opt/storage:rw
+
+  backend:
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "3000:3000"
+    init: true
+    command: /app/run_server.sh
+    entrypoint: ["/bin/bash"]
+    restart: unless-stopped
+    networks:
+      - ctf-network
+
+volumes:
+  mcc-ctfd:
+    driver: local
+
+networks:
+  ctf-network:
+    driver: bridge

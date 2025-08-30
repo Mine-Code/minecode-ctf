@@ -7,12 +7,5 @@
   },
   "cSpell.words": [
     "stackexec"
-  ],
-  "saveAndRun": {
-    "commands": [
-      {
-        "cmd": "./run_server.sh"
-      }
-    ]
-  }
+  ]
 }

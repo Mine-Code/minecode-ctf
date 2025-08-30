@@ -1,12 +1,13 @@
-import { Router } from "@kapsonfire/bun-bakery"
+import { Hono } from "hono";
+import { apiRoute } from "./routes/api";
+import { wsRoute, websocket } from "./routes/ws";
 
-const router = new Router({
-  assetsPath: `${import.meta.dir}/backend/assets/`,
-  routesPath: `${import.meta.dir}/backend/routes/`,
-  port: process.env.PORT ? parseInt(process.env.PORT) : undefined || 3000
-});
+const app = new Hono();
 
-router.listen()
+app.route("/api", apiRoute).route("/ws", wsRoute);
 
-await router.awaitListen();
-console.log('[Server] CTF Server started');
+export default {
+  port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
+  fetch: app.fetch,
+  websocket,
+};

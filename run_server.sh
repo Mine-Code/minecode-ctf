@@ -1,4 +1,18 @@
-#!/bin/bash
+#!/usr/bin/env sh
+
+cd `dirname $0`
+
+if [ ! -z "$CTF_RUNTIME_PATH" ]; then
+  printf "\e[1;32mBuilding minecode-ctf-runner\e[0m\n"
+  docker build -t minecode-ctf-runner $CTF_RUNTIME_PATH
+fi
+
+if [ -z "$BUN_INSTALL" ]; then
+  BUN=bun
+else
+  BUN=$BUN_INSTALL/bin/bun
+fi
+
 set -e
 
 untar_problems() {
