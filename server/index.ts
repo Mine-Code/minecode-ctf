@@ -1,5 +1,4 @@
-
-import problemManager from "./datas/problem_manager.js";
+import problemManager from "./datas/problem_manager";
 
 let f = false;
 
@@ -29,4 +28,4 @@ setInterval(() => {
     console.log("done!");
     process.exit(0);
   }
-}, 1000)
+}, 1000);

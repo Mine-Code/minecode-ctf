@@ -1,27 +1,20 @@
-import { readFileSync } from "fs";
-import path from "path";
-import Metadata from "./metadata/metadata.js";
+import { HostProcess, ProblemV1 as SuperProblem } from "../../ctf";
 
 export default class Problem {
-  metadata: Metadata;
-
-  constructor(public problem_path: string) {
-    const metadata_string = readFileSync(
-      path.join(problem_path, "metadata.json"),
-    ).toString();
-    const metadata_object = JSON.parse(metadata_string);
-    this.metadata = new Metadata(problem_path, metadata_object);
-  }
+  constructor(public super_problem: SuperProblem) {}
 
   init() {
-    return this.metadata.tasks.init.execute();
+    return this.super_problem.doInit();
   }
 
   runtime() {
-    return this.metadata.tasks.runtime.execute();
+    return this.super_problem.spawnProblem();
   }
 
   daemon() {
-    return this.metadata.tasks.daemon.execute();
+    // dummy process
+    const process = new HostProcess("sleep 9999999999");
+
+    return process;
   }
 }
