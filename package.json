@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@hono/node-server": "^1.19.0",
     "hono": "^4.8.5",
     "ws": "^8.9.0",
     "wsstream": "^0.2.0"
@@ -7,7 +8,13 @@
   "name": "eafe3092032fafaeofe32902ppqf2",
   "module": "index.js",
   "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js"
+  },
   "devDependencies": {
-    "bun-types": "^0.4.0"
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "typescript": "^5.0.0"
   }
 }

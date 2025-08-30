@@ -14,7 +14,8 @@
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "types": [
-      "bun-types"
+      "node"
     ],
+    "outDir": "./dist"
   }
 }

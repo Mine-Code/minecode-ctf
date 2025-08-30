@@ -7,10 +7,10 @@ if [ ! -z "$CTF_RUNTIME_PATH" ]; then
   docker build -t minecode-ctf-runner $CTF_RUNTIME_PATH
 fi
 
-if [ -z "$BUN_INSTALL" ]; then
-  BUN=bun
+if [ -z "$NODE_PATH" ]; then
+  NODE=node
 else
-  BUN=$BUN_INSTALL/bin/bun
+  NODE=$NODE_PATH/bin/node
 fi
 
 set -e
@@ -96,5 +96,8 @@ start_problem_daemons
 printf "\e[1;32mSetup metadata.json owner\e[0m\n"
 find . -name "metadata.json" | xargs sudo chown $USER
 
+printf "\e[1;32mBuilding TypeScript code\e[0m\n"
+npm run build
+
 printf "\e[1;32mStarting main program\e[0m\n"
-set +e; $BUN server/main.ts; set -e
+set +e; $NODE dist/main.js; set -e

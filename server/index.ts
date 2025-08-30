@@ -7,6 +7,10 @@ async function ent() {
   await problemManager.initalizeAllProblems();
   console.log(problemManager.getProblemHashes());
   let p = problemManager.getProblemWithHash("c54bc07541eae5a7ece61fbce94c1466");
+  if (!p) {
+    console.log("Problem not found!");
+    return;
+  }
   let r = p.runtime();
   r.writeStdin("test\n");
   r = await r;
