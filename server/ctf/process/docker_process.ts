@@ -1,4 +1,4 @@
-import { HostProcess } from "./host_process.js";
+import { HostProcess } from "./host_process";
 
 export class DockerProcess extends HostProcess {
   constructor(container_id: string, public command: string) {

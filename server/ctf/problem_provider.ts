@@ -1,6 +1,6 @@
 import { normalize } from "path";
-import { IProblem, ProblemV1 } from "./problem/index.js";
-import { DockerWorker } from "./worker/index.js";
+import { IProblem, ProblemV1 } from "./problem";
+import { DockerWorker } from "./worker";
 import { existsSync } from "fs";
 export type ProblemProvider = () => Promise<IProblem[]>;
 

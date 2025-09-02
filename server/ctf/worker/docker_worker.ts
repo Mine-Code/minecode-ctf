@@ -1,7 +1,7 @@
 import { join } from "path";
-import { IWorker } from "./index.js";
-import { IProcess, wait_for_process } from "../process/index.js";
-import { HostProcess, DockerProcess } from "../process/index.js";
+import { IWorker } from ".";
+import { IProcess, wait_for_process } from "../process";
+import { HostProcess, DockerProcess } from "../process";
 
 export type DockerWorkerInitResult =
   | { success: true }

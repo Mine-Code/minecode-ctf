@@ -1,5 +1,5 @@
-import { IProblem } from "../../../../ctf/index.js";
-import Task from "./task/task.js";
+import { IProblem } from "../../../../ctf";
+import Task from "./task/task";
 
 export default class Tasks {
   public runtime: Task;
