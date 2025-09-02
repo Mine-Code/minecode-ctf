@@ -6,14 +6,17 @@ async function ent() {
   await problemManager.initalizeAllProblems();
   console.log(problemManager.getProblemHashes());
   let p = problemManager.getProblemWithHash("c54bc07541eae5a7ece61fbce94c1466");
-  let r = p.runtime();
-  r.writeStdin("test\n");
-  r = await r;
+  if (p) {
+    let task = p.runtime();
+    task.writeStdin("test\n");
 
-  console.log("Done initalization");
-  console.log("-----");
-  console.log(r);
-  console.log("-----");
+    console.log("Done initalization");
+    console.log("-----");
+    console.log(task);
+    console.log("-----");
+  } else {
+    console.log("Problem not found");
+  }
 
   f = true;
 }

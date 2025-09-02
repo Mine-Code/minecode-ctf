@@ -1,0 +1,61 @@
+import { join } from "path";
+import { wait_for_process } from "../process";
+import { HostProcess, DockerProcess } from "../process";
+export class DockerWorker {
+    docker_image;
+    docker_container_id = null;
+    problem_base;
+    constructor(docker_image, problem_path) {
+        this.docker_image = docker_image;
+        this.problem_base = join(process.cwd(), problem_path);
+    }
+    async init() {
+        const p = new HostProcess(`docker run -v ${this.problem_base}:/mnt -di --rm ${this.docker_image} sleep infinity`);
+        let output = "";
+        p.onOut((data) => {
+            output += data;
+        });
+        const result = await wait_for_process(p, 5000);
+        if (!result.success) {
+            if (result.error_kind === "Timeout") {
+                return { success: false, error_kind: "Timeout" };
+            }
+            else if (result.error_kind === "ProcessExitedWithError") {
+                return {
+                    success: false,
+                    error_kind: "DockerRunFailed",
+                    output: output,
+                    exit_code: result.exit_code,
+                };
+            }
+        }
+        // コンテナIDは64文字の英数字
+        if (!output.trim().match(/^[a-z0-9]{64}$/)) {
+            return {
+                success: false,
+                error_kind: "OutputMalformed",
+                output: output,
+            };
+        }
+        this.docker_container_id = output.trim();
+        console.log(`Docker container started with ID: ${this.docker_container_id}`);
+        return { success: true };
+    }
+    async cleanup() {
+        if (this.docker_container_id) {
+            const p = new HostProcess(`docker container kill ${this.docker_container_id}`);
+            await wait_for_process(p, 5000);
+            this.docker_container_id = null;
+            console.log("Docker container closed successfully.");
+        }
+        else {
+            console.warn("No Docker container to close.");
+        }
+    }
+    spawn(cmdline) {
+        if (!this.docker_container_id) {
+            throw new Error("Docker container is not initialized");
+        }
+        return new DockerProcess(this.docker_container_id, cmdline);
+    }
+}

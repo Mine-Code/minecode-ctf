@@ -1,19 +1,21 @@
 import { Hono, type Next } from "hono";
 import type { Context } from "hono";
-import { ServerWebSocket } from "bun";
-import { createBunWebSocket } from "hono/bun";
+import { createNodeWebSocket } from "@hono/node-ws";
 import { WSMessageReceive } from "hono/ws";
 import problems from "../datas/problem_manager";
-import Problem from "../datas/problem/problem";
 import { Task } from "../datas/problem/metadata/tasks/task/task";
 
-type AppVariables = {
-  problem: Problem;
+type CompatibleProblem = {
+  runtime: () => Task;
 };
 
-const { upgradeWebSocket, websocket } = createBunWebSocket<ServerWebSocket>();
+type AppVariables = {
+  problem: CompatibleProblem;
+};
 
 const app = new Hono<{ Variables: AppVariables }>();
+
+const { upgradeWebSocket, injectWebSocket } = createNodeWebSocket({ app });
 
 // validate hash param before upgrade to WebSocket
 const validateHash = async (
@@ -40,7 +42,7 @@ const route = app.get(
   validateHash,
   upgradeWebSocket((c) => {
     // problem was validated by validateHash middleware
-    const problem: Problem = c.get("problem");
+    const problem: CompatibleProblem = c.get("problem");
     const task: Task = problem.runtime();
 
     return {
@@ -61,8 +63,10 @@ const route = app.get(
             str = data;
           } else if (data instanceof Blob) {
             str = await data.text();
-          } else if (data instanceof ArrayBuffer || ArrayBuffer.isView(data)) {
+          } else if (data instanceof ArrayBuffer) {
             str = new TextDecoder().decode(data);
+          } else if (ArrayBuffer.isView(data)) {
+            str = new TextDecoder().decode(data as unknown as ArrayBuffer);
           } else {
             console.warn("Received unsupported message type:", data);
             return;
@@ -83,4 +87,4 @@ const route = app.get(
   })
 );
 
-export { route as wsRoute, websocket };
+export { route as wsRoute, injectWebSocket };
