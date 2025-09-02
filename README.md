@@ -3,13 +3,11 @@
 To install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 To run:
 
 ```bash
-npm start
+pnpm start
 ```
-
-This project has been migrated from Bun to Node.js for better compatibility across different architectures.

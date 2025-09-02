@@ -8,11 +8,10 @@
   },
   "name": "eafe3092032fafaeofe32902ppqf2",
   "main": "dist/main.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "build": "tsc",
-    "start": "tsx server/main.ts",
-    "start:compiled": "node dist/main.js",
+    "start": "node dist/main.js",
     "dev": "tsx server/main.ts"
   },
   "devDependencies": {

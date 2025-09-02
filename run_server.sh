@@ -47,4 +47,4 @@ find . -name "metadata.json" | xargs sudo chown $USER
 
 printf "\e[1;32mStarting main program\e[0m\n"
 export PROBLEMS=$(find problems -name "metadata.json" | xargs dirname | tr '\n' ',' | sed 's/,$//')
-npm start
+pnpm start
