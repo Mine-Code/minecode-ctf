@@ -1,6 +1,6 @@
 import { Hono } from "hono";
-import { problemsRoute } from "./problems";
-import { testRoute } from "./test";
+import { problemsRoute } from "./problems.js";
+import { testRoute } from "./test.js";
 
 const app = new Hono();
 

@@ -1,7 +1,7 @@
-import { IProblem } from "../ctf";
-import { ProblemManager as Super } from "../ctf/problem_manager";
-import { problemFromEnv } from "../ctf/problem_provider";
-import { Task } from "./problem/metadata/tasks/task/task";
+import { IProblem } from "../ctf/index.js";
+import { ProblemManager as Super } from "../ctf/problem_manager.js";
+import { problemFromEnv } from "../ctf/problem_provider.js";
+import { Task } from "./problem/metadata/tasks/task/task.js";
 
 function problem_compatible_layer(super_problem: IProblem) {
   return {

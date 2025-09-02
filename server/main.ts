@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { serve } from '@hono/node-server';
-import { apiRoute } from "./routes/api";
-import { wsRoute, injectWebSocket } from "./routes/ws";
+import { apiRoute } from "./routes/api/index.js";
+import { wsRoute, injectWebSocket } from "./routes/ws.js";
 
 const app = new Hono();
 

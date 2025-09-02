@@ -2,8 +2,8 @@ import { Hono, type Next } from "hono";
 import type { Context } from "hono";
 import { createNodeWebSocket } from "@hono/node-ws";
 import { WSMessageReceive } from "hono/ws";
-import problems from "../datas/problem_manager";
-import { Task } from "../datas/problem/metadata/tasks/task/task";
+import problems from "../datas/problem_manager.js";
+import { Task } from "../datas/problem/metadata/tasks/task/task.js";
 
 type CompatibleProblem = {
   runtime: () => Task;

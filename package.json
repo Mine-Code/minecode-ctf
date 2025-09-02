@@ -8,7 +8,7 @@
   },
   "name": "eafe3092032fafaeofe32902ppqf2",
   "main": "dist/main.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
