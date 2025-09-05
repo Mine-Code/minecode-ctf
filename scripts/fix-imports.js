@@ -58,7 +58,12 @@ function resolveImportPath(basePath, importPath) {
 }
 
 // Find all JS files in the dist directory
-const distDir = join(__dirname, 'dist');
+const distDir = join(__dirname, '..', 'dist');
+if (!existsSync(distDir)) {
+  console.error('dist directory not found');
+  process.exit(1);
+}
+
 const files = findJsFiles(distDir);
 
 files.forEach(file => {
@@ -83,6 +88,7 @@ files.forEach(file => {
   
   if (content !== updatedContent) {
     writeFileSync(file, updatedContent);
+    console.log(`Fixed imports in: ${file}`);
   }
 });
 

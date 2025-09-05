@@ -20,8 +20,7 @@
       "node"
     ],
     "allowImportingTsExtensions": false,
-    "noEmit": false,
-    "verbatimModuleSyntax": false
+    "noEmit": false
   },
   "include": [
     "server/**/*"
