@@ -1,4 +1,4 @@
-import { DockerWorker, IProblem, IProcess, IWorker } from "../../../../../ctf";
+import { DockerWorker, IProblem, IProcess, IWorker } from "../../../../../ctf/index.js";
 
 export class Task {
   output: string = "";

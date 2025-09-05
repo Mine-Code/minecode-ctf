@@ -1,5 +1,5 @@
-export { DockerProcess } from "./docker_process";
-export { HostProcess } from "./host_process";
+export { DockerProcess } from "./docker_process.js";
+export { HostProcess } from "./host_process.js";
 
 export interface IProcess {
   writeIn(text: string): void;

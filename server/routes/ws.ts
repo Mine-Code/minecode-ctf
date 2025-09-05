@@ -2,8 +2,8 @@ import { Hono, type Next } from "hono";
 import type { Context } from "hono";
 import { createNodeWebSocket } from "@hono/node-ws";
 import { WSMessageReceive } from "hono/ws";
-import problems from "../datas/problem_manager";
-import { Task } from "../datas/problem/metadata/tasks/task/task";
+import problems from "../datas/problem_manager.js";
+import { Task } from "../datas/problem/metadata/tasks/task/task.js";
 
 type CompatibleProblem = {
   runtime: () => Task;
@@ -66,9 +66,9 @@ const route = app.get(
           } else if (data instanceof ArrayBuffer) {
             str = new TextDecoder().decode(data);
           } else if (ArrayBuffer.isView(data)) {
-            // Cast is needed because TypeScript's ArrayBufferView union type is too strict
-            // TextDecoder.decode actually accepts any ArrayBufferView (Uint8Array, etc.)
-            str = new TextDecoder().decode(data as any);
+            // Convert ArrayBufferView to Uint8Array for TextDecoder
+            const uint8Array = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+            str = new TextDecoder().decode(uint8Array);
           } else {
             console.warn("Received unsupported message type:", data);
             return;

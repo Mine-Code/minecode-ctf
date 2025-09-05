@@ -1,4 +1,4 @@
-import { HostProcess, ProblemV1 as SuperProblem } from "../../ctf";
+import { HostProcess, ProblemV1 as SuperProblem } from "../../ctf/index.js";
 
 export default class Problem {
   constructor(public super_problem: SuperProblem) {}

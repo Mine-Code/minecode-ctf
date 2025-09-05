@@ -9,5 +9,5 @@ pnpm install
 To run:
 
 ```bash
-pnpm start
+./run_server.sh
 ```

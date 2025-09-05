@@ -1,5 +1,5 @@
-import { ProblemProvider } from ".";
-import { IProblem } from "./problem";
+import { ProblemProvider } from "./index.js";
+import { IProblem } from "./problem/index.js";
 
 export class ProblemManager {
   private problems: { [hash: string]: IProblem } = {};

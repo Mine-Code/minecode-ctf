@@ -1,7 +1,7 @@
-import { IProcess } from "../process";
-import { IWorker } from "../worker";
+import { IProcess } from "../process/index.js";
+import { IWorker } from "../worker/index.js";
 
-export { ProblemV1 } from "./problem_v1";
+export { ProblemV1 } from "./problem_v1.js";
 
 export type ProblemInitResult =
   | { result: "Success" }

@@ -1,7 +1,7 @@
 import { createHash } from "crypto";
-import { IProblem, ProblemInitResult } from ".";
-import { IWorker } from "../worker";
-import { IProcess, wait_for_process } from "../process";
+import { IProblem, ProblemInitResult } from "./index.js";
+import { IWorker } from "../worker/index.js";
+import { IProcess, wait_for_process } from "../process/index.js";
 
 export class ProblemV1 implements IProblem {
   problem_hash: string;
