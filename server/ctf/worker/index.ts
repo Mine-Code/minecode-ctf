@@ -1,6 +1,6 @@
-import { IProcess } from "../process/index.js";
+import { IProcess } from "../process";
 
-export { DockerWorker } from "./docker_worker.js";
+export { DockerWorker } from "./docker_worker";
 
 export interface IWorker {
   spawn(cmdline: string): IProcess;

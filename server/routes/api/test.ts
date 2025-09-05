@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import problems from "../../datas/problem_manager.js";
+import problems from "../../datas/problem_manager";
 
 const app = new Hono();
 
