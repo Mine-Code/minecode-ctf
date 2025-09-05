@@ -8,9 +8,7 @@ if [ ! -z "$CTF_RUNTIME_PATH" ]; then
 fi
 
 # Check if Node.js is available
-if command -v node >/dev/null 2>&1; then
-  NODE=node
-else
+if ! command -v node >/dev/null 2>&1; then
   echo "Error: Node.js is not installed or not in PATH"
   exit 1
 fi

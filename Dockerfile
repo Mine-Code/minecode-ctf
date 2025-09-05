@@ -1,6 +1,5 @@
 FROM ubuntu:24.04
 
-ENV BUN_INSTALL="/root/.bun"
 ENV CTF_RUNTIME_PATH=/tmp/ctf-runtime
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -10,7 +9,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   unzip && \
   rm -rf /var/lib/apt/lists/* && \
   curl -fsSL https://get.docker.com | sh && \
-  curl -fsSL https://bun.com/install | bash -s "bun-v1.2.20"
+  curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+  apt-get install -y nodejs && \
+  npm install -g pnpm
 
 COPY ctf-runtime /tmp/ctf-runtime
 

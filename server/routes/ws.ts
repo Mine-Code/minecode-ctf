@@ -66,7 +66,9 @@ const route = app.get(
           } else if (data instanceof ArrayBuffer) {
             str = new TextDecoder().decode(data);
           } else if (ArrayBuffer.isView(data)) {
-            str = new TextDecoder().decode(data as unknown as ArrayBuffer);
+            // Cast is needed because TypeScript's ArrayBufferView union type is too strict
+            // TextDecoder.decode actually accepts any ArrayBufferView (Uint8Array, etc.)
+            str = new TextDecoder().decode(data as any);
           } else {
             console.warn("Received unsupported message type:", data);
             return;
