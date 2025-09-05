@@ -3,7 +3,7 @@
 To install dependencies:
 
 ```bash
-pnpm install
+npm install
 ```
 
 To run:
@@ -11,7 +11,3 @@ To run:
 ```bash
 ./run_server.sh
 ```
-
-## Development
-
-This project follows [Conventional Commits](https://conventionalcommits.org/). See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for commit message guidelines.

@@ -12,16 +12,12 @@
   "scripts": {
     "build": "tsc && node scripts/fix-imports.js",
     "start": "node dist/main.js",
-    "dev": "tsx server/main.ts",
-    "prepare": "husky"
+    "dev": "tsx server/main.ts"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
     "@types/node": "^20.0.0",
     "@types/ws": "^8.5.0",
     "glob": "^11.0.3",
-    "husky": "^9.1.6",
     "tsx": "^4.20.5",
     "typescript": "^5.0.0"
   }
