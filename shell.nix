@@ -1,12 +1,13 @@
 { pkgs }:
 pkgs.mkShell {
   packages = with pkgs; [
-    bun
     websocat
     socat
+    pnpm
+    lsof
   ];
 
   shellHook = ''
-    bun install
+    pnpm install
   '';
 }
