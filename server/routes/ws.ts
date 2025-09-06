@@ -1,7 +1,5 @@
-import { Hono, type Next } from "hono";
+import { type Next } from "hono";
 import type { Context } from "hono";
-import { createNodeWebSocket } from "@hono/node-ws";
-import { WSMessageReceive } from "hono/ws";
 import problems from "../datas/problem_manager";
 import { Task } from "../datas/problem/metadata/tasks/task/task";
 
@@ -12,10 +10,6 @@ type CompatibleProblem = {
 type AppVariables = {
   problem: CompatibleProblem;
 };
-
-const app = new Hono<{ Variables: AppVariables }>();
-
-const { upgradeWebSocket, injectWebSocket } = createNodeWebSocket({ app });
 
 // validate hash param before upgrade to WebSocket
 const validateHash = async (
@@ -37,56 +31,4 @@ const validateHash = async (
   await next();
 };
 
-const route = app.get(
-  "/",
-  validateHash,
-  upgradeWebSocket((c) => {
-    // problem was validated by validateHash middleware
-    const problem: CompatibleProblem = c.get("problem");
-    const task: Task = problem.runtime();
-
-    return {
-      onOpen: (_, ws) => {
-        task.onMessage((data) => ws.send(data));
-
-        task.onDisconnect(() => {
-          ws.send("[Wrapper] The app has exited\n");
-          ws.close();
-        });
-      },
-      onMessage: async (event, _ws) => {
-        const data: WSMessageReceive = event.data;
-        let str: string;
-
-        try {
-          if (typeof data === "string") {
-            str = data;
-          } else if (data instanceof Blob) {
-            str = await data.text();
-          } else if (data instanceof ArrayBuffer) {
-            str = new TextDecoder().decode(data);
-          } else if (ArrayBuffer.isView(data)) {
-            // Convert ArrayBufferView to Uint8Array for TextDecoder
-            const uint8Array = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
-            str = new TextDecoder().decode(uint8Array);
-          } else {
-            console.warn("Received unsupported message type:", data);
-            return;
-          }
-          task.writeStdin(str);
-        } catch (error) {
-          console.error("Failed to process WebSocket message:", error);
-        }
-      },
-      onClose: () => {
-        task.kill();
-      },
-      onError: (error) => {
-        console.error("WebSocket error:", error);
-        task.kill();
-      },
-    };
-  })
-);
-
-export { route as wsRoute, injectWebSocket };
+export { validateHash };
