@@ -5,16 +5,31 @@
     ],
     "module": "esnext",
     "target": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "noImplicitAny": false,
     "allowJs": true,
     "downlevelIteration": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
+    "outDir": "./dist",
+    "rootDir": "./server",
     "types": [
-      "bun-types"
+      "node"
     ],
+    "allowImportingTsExtensions": false,
+    "noEmit": false
+  },
+  "include": [
+    "server/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "ts-node": {
+    "esm": true
   }
 }

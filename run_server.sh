@@ -7,10 +7,10 @@ if [ ! -z "$CTF_RUNTIME_PATH" ]; then
   docker build -t minecode-ctf-runner $CTF_RUNTIME_PATH
 fi
 
-if [ -z "$BUN_INSTALL" ]; then
-  BUN=bun
-else
-  BUN=$BUN_INSTALL/bin/bun
+# Check if Node.js is available
+if ! command -v node >/dev/null 2>&1; then
+  echo "Error: Node.js is not installed or not in PATH"
+  exit 1
 fi
 
 set -e
@@ -45,4 +45,4 @@ find . -name "metadata.json" | xargs sudo chown $USER
 
 printf "\e[1;32mStarting main program\e[0m\n"
 export PROBLEMS=$(find problems -name "metadata.json" | xargs dirname | tr '\n' ',' | sed 's/,$//')
-bun server/main.ts
+npm start
