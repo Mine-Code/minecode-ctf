@@ -1,0 +1,8 @@
+{
+  "name": "Test Problem",
+  "author": "Test Author",
+  "description": "A test problem for debugging",
+  "flag_hash": "test_flag_hash",
+  "hints": [],
+  "files": {}
+}
