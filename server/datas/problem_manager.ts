@@ -1,6 +1,6 @@
 import { IProblem } from "../ctf";
 import { ProblemManager as Super } from "../ctf/problem_manager";
-import { problemFromEnv } from "../ctf/problem_provider";
+import { problemV2_FindAll } from "../ctf/problem_provider";
 import { Task } from "./problem/metadata/tasks/task/task";
 
 function problem_compatible_layer(super_problem: IProblem) {
@@ -15,7 +15,7 @@ class ProblemManager {
   super_manager: Super;
 
   constructor() {
-    this.super_manager = new Super(problemFromEnv);
+    this.super_manager = new Super(problemV2_FindAll);
 
     this.super_manager
       .init()
