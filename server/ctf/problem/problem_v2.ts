@@ -3,6 +3,7 @@ import { IWorker } from "../worker";
 import { IProcess, wait_for_process } from "../process";
 import { existsSync, readFileSync } from "fs";
 
+const BUILD_TIMEOUT_MS = 3600 * 1000;
 const DOCKER_IMAGE_PREFIX = "mcctf/p2/";
 
 type Metadata = {
@@ -54,7 +55,7 @@ export class ProblemV2 implements IProblem {
       console.log(`Build output: ${data}`);
     });
 
-    const result = await wait_for_process(p, 3600 * 1000);
+    const result = await wait_for_process(p, BUILD_TIMEOUT_MS);
     if (result.success) return { result: "Success" };
 
     if (result.error_kind === "Timeout") {
