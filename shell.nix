@@ -1,7 +1,7 @@
 { pkgs }:
 pkgs.mkShell {
   packages = with pkgs; [
-    nodejs_24
+    nodejs_20
     pnpm
     websocat
     socat
