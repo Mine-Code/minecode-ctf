@@ -53,14 +53,9 @@ export const problemV2_FindAll = async () => {
   const problem_v2_path = process.env.PROBLEM_V2_PATH ?? "";
   console.log(`PROBLEM_V2_PATH=${problem_v2_path}`);
 
-  // glob problem_v2_path/*/metadata.json
   const detected_metadatas = await glob(`${problem_v2_path}/*/metadata.json`, {
     nodir: true,
   });
-  console.log(
-    `Detected ${detected_metadatas.length} ProblemV2 metadata.json files.`
-  );
-  console.log(detected_metadatas);
 
   if (detected_metadatas.length === 0) {
     console.warn(
@@ -74,9 +69,6 @@ export const problemV2_FindAll = async () => {
     .filter((x) => !x.includes(".."))
     .map((x) => normalize(x.replace(/\/metadata\.json$/, "")))
     .filter((x) => x !== "" && isMineCodeCTFProblemV2(x));
-  console.log(
-    `Filtered to ${problemBasepaths.length} valid ProblemV2 basepaths.`
-  );
 
   let problems: IProblem[] = [];
   const worker = new HostWorker();
