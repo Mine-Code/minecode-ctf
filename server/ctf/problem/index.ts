@@ -2,6 +2,7 @@ import { IProcess } from "../process";
 import { IWorker } from "../worker";
 
 export { ProblemV1 } from "./problem_v1";
+export { ProblemV2 } from "./problem_v2";
 
 export type ProblemInitResult =
   | { result: "Success" }
