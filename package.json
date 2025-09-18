@@ -10,7 +10,7 @@
   "main": "dist/main.js",
   "type": "module",
   "scripts": {
-    "build": "tsc && node scripts/fix-imports.js",
+    "build": "tsc",
     "start": "node dist/main.js",
     "dev": "tsx server/main.ts"
   },
