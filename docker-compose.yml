@@ -9,7 +9,7 @@ services:
     entrypoint: /entry.sh
     environment:
       DISCORD_WEBHOOK_URL: "" # TODO: replace with your webhook URL
-      DISCORD_WEBHOOK_LIMIT: "3" # announce first N solves
+      DISCORD_WEBHOOK_LIMIT: "50" # announce first N solves
       DISCORD_WEBHOOK_MESSAGE: "{user} solved {challenge}! ({solves} solves total)"
     volumes:
       - ./ctfd/entry.sh:/entry.sh
