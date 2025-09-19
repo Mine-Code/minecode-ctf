@@ -7,9 +7,14 @@ services:
     restart: unless-stopped
     init: true
     entrypoint: /entry.sh
+    environment:
+      DISCORD_WEBHOOK_URL: "" # TODO: replace with your webhook URL
+      DISCORD_WEBHOOK_LIMIT: "3" # announce first N solves
+      DISCORD_WEBHOOK_MESSAGE: "{user} solved {challenge}! ({solves} solves total)"
     volumes:
       - ./ctfd/entry.sh:/entry.sh
       - mcc-ctfd:/opt/storage
+      - ./ctfd/plugins/ctfd-discord-webhook-plugin:/opt/CTFd/CTFd/plugins/ctfd-discord-webhook-plugin:ro
 
   backend:
     build: .
@@ -17,7 +22,7 @@ services:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 3030:3000
+      - 3000:3000 # TODO: change to 3000:3000
     init: true
     command: /app/run_server.sh
     restart: unless-stopped
