@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import { ProblemManager } from "../../ctf";
 
+const TIMEOUT_MS = 5000;
+
 const app = new Hono<{
   Variables: {
     problems: ProblemManager;
@@ -65,10 +67,16 @@ export const route = app.get("/", async (c) => {
 
   const output = await new Promise((resolve) => {
     let output = "";
+    let timeout = setTimeout(() => {
+      task.kill();
+      resolve(output);
+    }, TIMEOUT_MS);
+
     task.onOut((data) => {
       output += data;
     });
     task.onExit((code) => {
+      clearTimeout(timeout);
       resolve(output);
     });
   });
