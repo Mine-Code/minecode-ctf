@@ -1,10 +1,14 @@
-export { IProblem, ProblemV1 } from "./problem";
+export { type IProblem, ProblemV1 } from "./problem";
 export {
   DockerProcess,
   HostProcess,
-  IProcess,
+  type IProcess,
   wait_for_process,
 } from "./process";
-export { IWorker, DockerWorker } from "./worker";
+export { type IWorker, DockerWorker } from "./worker";
 export { ProblemManager } from "./problem_manager";
-export { ProblemProvider, problemFromEnv } from "./problem_provider";
+export {
+  type ProblemProvider,
+  problemFromEnv,
+  problemV2_FindAll,
+} from "./problem_provider";

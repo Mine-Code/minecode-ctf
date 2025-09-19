@@ -1,15 +1,18 @@
 import { Hono } from "hono";
-import problems from "../../datas/problem_manager";
+import { ProblemManager } from "../../ctf";
 
-const app = new Hono();
+const app = new Hono<{
+  Variables: {
+    problems: ProblemManager;
+  };
+}>();
 
-const route = app.get("/", async (c) => {
-  const hashes = problems.getProblemHashes();
+export const route = app.get("/", async (c) => {
+  const problems: ProblemManager = c.get("problems");
+  const problemList = Object.keys(problems.getProblems());
 
   return c.json({
     status: "ok",
-    data: hashes,
+    data: problemList,
   });
 });
-
-export { route as problemsRoute };

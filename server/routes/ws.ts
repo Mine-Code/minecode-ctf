@@ -2,53 +2,55 @@ import { Hono, type Next } from "hono";
 import type { Context } from "hono";
 import { createNodeWebSocket } from "@hono/node-ws";
 import { WSMessageReceive } from "hono/ws";
-import problems from "../datas/problem_manager";
-import { Task } from "../datas/problem/metadata/tasks/task/task";
-
-type CompatibleProblem = {
-  runtime: () => Task;
-};
+import { IProblem, ProblemManager } from "../ctf";
 
 type AppVariables = {
-  problem: CompatibleProblem;
+  problem: IProblem;
+  problems: ProblemManager;
 };
 
-// validate hash param before upgrade to WebSocket
-const validateHash = async (
-  c: Context<{ Variables: AppVariables }>,
-  next: Next
-) => {
-  const hash = c.req.query("hash");
-  if (!hash) {
-    return c.text("hash is not specified", 400);
-  }
-
-  const problem = problems.getProblemWithHash(hash);
-  if (!problem) {
-    return c.text("problem not found", 404);
-  }
-
-  // if problem is found, set it to context
-  c.set("problem", problem);
-  await next();
-};
-
-export function registerRoutes(app: Hono<{ Variables: AppVariables }>) {
+export function registerRoutes({
+  app,
+  problems,
+}: {
+  app: Hono<{ Variables: AppVariables }>;
+  problems: ProblemManager;
+}) {
   const { upgradeWebSocket, injectWebSocket } = createNodeWebSocket({ app });
+
+  // validate hash param before upgrade to WebSocket
+  const validateHash = async (
+    c: Context<{ Variables: AppVariables }>,
+    next: Next
+  ) => {
+    const hash = c.req.query("hash");
+    if (!hash) {
+      return c.text("hash is not specified", 400);
+    }
+
+    const problem = problems.getProblemByHash(hash);
+    if (!problem) {
+      return c.text("problem not found", 404);
+    }
+
+    // if problem is found, set it to context
+    c.set("problem", problem);
+    await next();
+  };
 
   const route = app.get(
     "/",
     validateHash,
     upgradeWebSocket((c) => {
       // problem was validated by validateHash middleware
-      const problem: CompatibleProblem = c.get("problem");
-      const task: Task = problem.runtime();
+      const problem: IProblem = c.get("problem");
+      const task = problem.spawnProblem();
 
       return {
         onOpen: (_, ws) => {
-          task.onMessage((data) => ws.send(data));
+          task.onOut((data) => ws.send(data));
 
-          task.onDisconnect(() => {
+          task.onExit(() => {
             ws.send("[Wrapper] The app has exited\n");
             ws.close();
           });
@@ -76,7 +78,7 @@ export function registerRoutes(app: Hono<{ Variables: AppVariables }>) {
               console.warn("Received unsupported message type:", data);
               return;
             }
-            task.writeStdin(str);
+            task.writeIn(str);
           } catch (error) {
             console.error("Failed to process WebSocket message:", error);
           }
