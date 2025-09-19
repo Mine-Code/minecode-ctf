@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   unzip && \
   rm -rf /var/lib/apt/lists/* && \
   curl -fsSL https://get.docker.com | sh && \
-  curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+  curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
   apt-get install -y nodejs && \
   npm install -g pnpm
 
