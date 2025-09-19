@@ -10,7 +10,14 @@ async function main() {
   const problem_manager = new ProblemManager(problemV2_FindAll);
   await problem_manager.init();
 
-  const app = new Hono<{ Variables: { problem: IProblem } }>();
+  const app = new Hono<{
+    Variables: { problem: IProblem; problems: ProblemManager };
+  }>();
+  app.use("*", async (c, next) => {
+    c.set("problems", problem_manager);
+    await next();
+  });
+
   const { route: wsRoute, injectWebSocket } = registerWSRoutes({
     app,
     problems: problem_manager,

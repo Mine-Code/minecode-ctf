@@ -1,9 +1,14 @@
 import { Hono } from "hono";
-import problems from "../../datas/problem_manager";
+import { ProblemManager } from "../../ctf";
 
-const app = new Hono();
+const app = new Hono<{
+  Variables: {
+    problems: ProblemManager;
+  };
+}>();
 
-const route = app.get("/", async (c) => {
+export const route = app.get("/", async (c) => {
+  const problems: ProblemManager = c.get("problems");
   const hash = c.req.query("hash");
   const raw_input = c.req.query("raw_input");
 
@@ -27,7 +32,7 @@ const route = app.get("/", async (c) => {
     );
   }
 
-  const problem = problems.getProblemWithHash(hash);
+  const problem = problems.getProblemByHash(hash);
 
   if (!problem) {
     return c.json(
@@ -55,15 +60,21 @@ const route = app.get("/", async (c) => {
   }
   const input = _input;
 
-  const task = problem.runtime();
-  task.writeStdin(input);
+  const task = problem.spawnProblem();
+  task.writeIn(input);
 
-  const output = await task.checkOutputWithTimeout(2);
+  const output = await new Promise((resolve) => {
+    let output = "";
+    task.onOut((data) => {
+      output += data;
+    });
+    task.onExit((code) => {
+      resolve(output);
+    });
+  });
 
   return c.json({
     status: "ok",
     output,
   });
 });
-
-export { route as testRoute };
