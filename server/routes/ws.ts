@@ -6,6 +6,7 @@ import { IProblem, ProblemManager } from "../ctf";
 
 type AppVariables = {
   problem: IProblem;
+  problems: ProblemManager;
 };
 
 export function registerRoutes({
