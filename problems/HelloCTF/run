@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo "Welcome to HelloCTF!"
+echo "Please enter your name:"
+read name
+echo "Hello, ${name}!"
+echo "Here is your flag: FLAG{this_is_a_sample_flag}"
