@@ -22,7 +22,7 @@ services:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 3000:3000 # TODO: change to 3000:3000
+      - 3000:3000
     init: true
     command: /app/run_server.sh
     restart: unless-stopped
