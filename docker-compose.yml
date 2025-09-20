@@ -2,8 +2,6 @@ services:
   ctfd:
     image: ctfd/ctfd
     user: root # TODO: fix permission issues
-    ports:
-      - 8000:8000
     restart: unless-stopped
     init: true
     entrypoint: /entry.sh
@@ -22,10 +20,38 @@ services:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 3000:3000
+      # CTF problem ports
+      - "9500:9500" # syoch.vulnerable_rsa3
+      - "9501:9501" # syoch.vulnerable_rsa2
+      - "9502:9502" # syoch.vulnerable_rsa1
+      - "9503:9503" # syoch.termination
+      - "9504:9504" # syoch.hello_ctf
+      - "9505:9505" # syoch.c0rrupt_stack
+      - "9506:9506" # syoch.basic_exploitation
     init: true
     command: /app/run_server.sh
     restart: unless-stopped
+
+  nginx:
+    image: nginx:stable
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./letsencrypt:/etc/letsencrypt
+      - ./letsencrypt-www:/var/www/certbot
+      - ./nginx/logs:/var/log/nginx
+    depends_on:
+      - ctfd
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./letsencrypt:/etc/letsencrypt
+      - ./letsencrypt-www:/var/www/certbot
 
 volumes:
   mcc-ctfd:

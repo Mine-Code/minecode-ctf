@@ -1,0 +1,9 @@
+{
+  "syoch.vulnerable_rsa3": 9500,
+  "syoch.vulnerable_rsa2": 9501,
+  "syoch.vulnerable_rsa1": 9502,
+  "syoch.termination": 9503,
+  "syoch.hello_ctf": 9504,
+  "syoch.c0rrupt_stack": 9505,
+  "syoch.basic_exploitation": 9506
+}
