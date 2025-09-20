@@ -1,38 +1,31 @@
-version: '3.8'
-
 services:
   ctfd:
     image: ctfd/ctfd
+    user: root # TODO: fix permission issues
     ports:
-      - "8000:8000"
+      - 8000:8000
     restart: unless-stopped
-    networks:
-      - ctf-network
     init: true
-    entrypoint: ["/entry.sh"]
+    entrypoint: /entry.sh
+    environment:
+      DISCORD_WEBHOOK_URL: "" # TODO: replace with your webhook URL
+      DISCORD_WEBHOOK_LIMIT: "50" # announce first N solves
+      DISCORD_WEBHOOK_MESSAGE: "{user} solved {challenge}! ({solves} solves total)"
     volumes:
       - ./ctfd/entry.sh:/entry.sh
-      - mcc-ctfd:/opt/storage:rw
+      - mcc-ctfd:/opt/storage
+      - ./ctfd/plugins/ctfd-discord-webhook-plugin:/opt/CTFd/CTFd/plugins/ctfd-discord-webhook-plugin:ro
 
   backend:
-    build:
-      dockerfile: Dockerfile
+    build: .
     volumes:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "3000:3000"
+      - 3000:3000
     init: true
     command: /app/run_server.sh
-    entrypoint: ["/bin/bash"]
     restart: unless-stopped
-    networks:
-      - ctf-network
 
 volumes:
   mcc-ctfd:
-    driver: local
-
-networks:
-  ctf-network:
-    driver: bridge

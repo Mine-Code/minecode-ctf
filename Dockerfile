@@ -6,7 +6,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   ca-certificates=20240203 \
   ca-certificates \
   curl \
-  unzip && \
+  unzip \
+  make \
+  && \
   rm -rf /var/lib/apt/lists/* && \
   curl -fsSL https://get.docker.com | sh && \
   curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \

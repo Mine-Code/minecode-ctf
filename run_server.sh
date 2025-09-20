@@ -2,18 +2,25 @@
 
 cd `dirname $0`
 
-if [ ! -z "$CTF_RUNTIME_PATH" ]; then
-  printf "\e[1;32mBuilding minecode-ctf-runner\e[0m\n"
-  docker build -t minecode-ctf-runner $CTF_RUNTIME_PATH
+set -e
+
+# build minecode-ctf-runner
+if [ -z "$CTF_RUNTIME_PATH" ]; then
+  [ -d ./ctf-runtime ] && CTF_RUNTIME_PATH=./ctf-runtime
 fi
 
-# Check if Node.js is available
+if [ -n "$CTF_RUNTIME_PATH" ] && [ -d "$CTF_RUNTIME_PATH" ] && [ -f "$CTF_RUNTIME_PATH/Makefile" ]; then
+  printf "\e[1;32mBuilding minecode-ctf-runner via Makefile (%s)\e[0m\n" "$CTF_RUNTIME_PATH"
+  make -C "$CTF_RUNTIME_PATH"
+else
+  printf "\e[33mSkipping runner build (path or Makefile missing): %s\e[0m\n" "${CTF_RUNTIME_PATH:-unset}"
+fi
+
+# check if Node.js is available
 if ! command -v node >/dev/null 2>&1; then
   echo "Error: Node.js is not installed or not in PATH"
   exit 1
 fi
-
-set -e
 
 untar_problems() {
   printf "\e[1;32mUntaring problems...\e[0m\n"
@@ -45,4 +52,4 @@ find . -name "metadata.json" | xargs sudo chown $USER
 
 printf "\e[1;32mStarting main program\e[0m\n"
 export PROBLEMS=$(find problems -name "metadata.json" | xargs dirname | tr '\n' ',' | sed 's/,$//')
-npm start
+pnpm start

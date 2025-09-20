@@ -1,3 +1,6 @@
 [submodule "ctf-runtime"]
 	path = ctf-runtime
 	url = git@github.com:Mine-Code/ctf-runtime
+[submodule "ctfd/plugins/ctfd-discord-webhook-plugin"]
+	path = ctfd/plugins/ctfd-discord-webhook-plugin
+	url = git@github.com:sigpwny/ctfd-discord-webhook-plugin
