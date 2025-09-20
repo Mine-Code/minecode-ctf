@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 
+__attribute__((constructor))
+static void init(void) {
+  setbuf(stdin, NULL);
+  setbuf(stdout, NULL);
+}
+
 typedef unsigned char u8;
 
 int main() {
