@@ -4,4 +4,4 @@ echo "Welcome to HelloCTF!"
 echo "Please enter your name:"
 read name
 echo "Hello, ${name}!"
-echo "Here is your flag: TODO: mineCTF{W31c0m3_t0_c7f}"
+echo "Here is your flag: mineCTF{W31c0m3_t0_c7f}"
